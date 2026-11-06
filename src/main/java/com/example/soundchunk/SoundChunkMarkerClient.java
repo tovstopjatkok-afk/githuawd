@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ChunkPos;
@@ -30,7 +31,7 @@ public final class SoundChunkMarkerClient implements ClientModInitializer {
             var matrices = context.matrixStack();
             VertexConsumer lines = context.consumers().getBuffer(RenderLayer.getLines());
             int bottomY = context.world().getBottomY();
-            int topY = context.world().getTopY();
+            int topY = bottomY + context.world().getHeight();
 
             matrices.push();
             matrices.translate(-camera.getPos().x, -camera.getPos().y, -camera.getPos().z);
@@ -40,7 +41,7 @@ public final class SoundChunkMarkerClient implements ClientModInitializer {
                 double minX = pos.getStartX();
                 double minZ = pos.getStartZ();
                 Box box = new Box(minX, bottomY, minZ, minX + 16.0, topY, minZ + 16.0);
-                WorldRenderer.drawBox(matrices, lines, box, 1.0f, 0.05f, 0.05f, 1.0f);
+                VertexRendering.drawBox(matrices, lines, box, 1.0f, 0.05f, 0.05f, 1.0f);
             }
 
             matrices.pop();
